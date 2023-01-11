@@ -129,9 +129,9 @@ export default function App() {
             {dieElements}
         </div>
       <button onClick={rollDice} >{tenzies?"New Game":"Roll"}</button>
-      {bestRolls}
+      best rolls:{bestRolls}
       <br></br>
-      {(Math.floor((bestTime / 1000)))}:
+      best time:{(Math.floor((bestTime / 1000)))}:
             {("0" + ((bestTime/ 10) % 10))}
      {tenzies && <Confetti height={windowSize.windowHeight} width={windowSize.windowWidth}/>}
     </main>
