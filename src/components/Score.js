@@ -1,10 +1,12 @@
 export default function Score (props){
     return(
         <div className="score-con">
-                <span>dice rolled:{props.rolls}</span>
+         <span>dice rolled:{props.rolls}</span>
                 <br></br>
-                <span>Timer: {(Math.floor((props.time / 1000)))}:
-            {("0" + ((props.time / 10) % 10))}</span>
+        <span>Timer: {("0"+Math.floor((props.time /6000)%60)).slice(-2)}:
+            {("0"+Math.floor((props.time/1000)%60)).slice(-2)}:
+            {("0"+Math.floor((props.time/10)%1000)).slice(-2)}
+            </span>
         </div>
     )
 }

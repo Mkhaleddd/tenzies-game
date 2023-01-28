@@ -7,8 +7,10 @@ import Confetti from 'react-confetti'
 
 
 export default function App() {  
-    
+  const [isClick,setIsClick]=React.useState(false);
   const [rolls,setRolls] =React.useState(0);   
+  const [final, setFinal] = React.useState(0);
+  const [finalTime, setFinalTime] = React.useState(0);
   function generateNewDice() {
     return{
         value:Math.floor(Math.random()*6+1),
@@ -27,10 +29,15 @@ export default function App() {
   let dieElements=die.map(die=> <Die value={die.value}
      key={die.id}
      isHeld={die.isHeld}
-     holdDice={()=>holdDice(die.id)}
+     holdDice={()=>{holdDice(die.id)
+    }}
+    isClick={isClick}
      />) 
+    
       function resetGame() {
-          setTenzies(!tenzies)
+          setFinal(rolls)
+          setFinalTime(time)
+          setTenzies(true)         
           setDie(allNewDice())
           setRolls(-1) 
           setStart(true)
@@ -45,11 +52,14 @@ export default function App() {
         }))
         } else { 
           resetGame()
+          setTenzies(false)
+          
         }   
-         setRolls(prevRoll=>prevRoll+1);
-         setBestRolls(rolls+1)
-        
+        setRolls(prevRoll=>prevRoll+1);
+       
       }
+      
+      
       function holdDice(id) {
         setDie(prevDie =>
           prevDie.map( die=>{
@@ -65,30 +75,8 @@ export default function App() {
                         if (heldValues && equalValues) 
                         setTenzies(true) 
                         setStart(false)
-                        setRecords()
-                        },[die])
-/*                                        ////////                                  */
-      const [bestRolls,setBestRolls]=React.useState(JSON.parse(localStorage.getItem("best rolls")) || 0);
-      const [bestTime,setBestTime]=React.useState(JSON.parse(localStorage.getItem("best time")) || 0);
-
-       function setRecords(){
-        if (!bestRolls || rolls < bestRolls ) {
-          console.log(rolls)
-          setBestRolls(rolls)  
-        }  
-        if (!bestTime || (time/10) < bestTime) {
-          console.log(time)
-          setBestTime(time)
-        } 
-      };     
-     
-      React.useEffect(()=>
-      { localStorage.setItem("best rolls",JSON.stringify(bestRolls))},
-      [bestRolls]);
-      React.useEffect(()=>
-       {localStorage.setItem("best time",JSON.stringify(bestTime))},
-      [bestTime]);
-                        
+                      },[die])
+                  
  /*                       confetti height && width                   */          
           const [windowSize, setWindowSize] =React.useState({windowHeight:window.innerHeight,
             windowWidth:window.innerWidth});
@@ -99,7 +87,8 @@ export default function App() {
             }
           React.useEffect(()=>{
             window.addEventListener("resize",detectSize)
-            return ()=>window.removeEventListener("resize",detectSize)},[windowSize]);
+            return ()=>window.removeEventListener("resize",detectSize)}
+            ,[windowSize]);
 /*                            timer                    */  
 
           const [time, setTime] =React.useState(0);
@@ -108,16 +97,45 @@ export default function App() {
            let interval=null
             if (start) {
              interval=setInterval(() => {
-                  setTime((prevTime)=>prevTime+10)}
+                  setTime(prevTime=>prevTime+10)}
                   ,10)}
                   else{ 
                     clearInterval(interval);
                   }
                   return ()=> clearInterval(interval);
-          },[tenzies]) 
- 
+                },[tenzies]); 
+
+/*                                      ////////                                  */
+const [bestRolls,setBestRolls]=React.useState(JSON.parse(localStorage.getItem("best rolls")) || 0);
+const [bestTime,setBestTime]=React.useState(JSON.parse(localStorage.getItem("best time")) || 0);
+
+React.useEffect(()=>
+{ if(JSON.parse(localStorage.getItem("best rolls"))) {
+  if(final < JSON.parse(localStorage.getItem("best rolls")))
+  localStorage.removeItem("best rolls");
+  localStorage.setItem("best rolls",JSON.stringify(rolls));
+} else {
+  localStorage.setItem("best rolls",JSON.stringify(rolls));
+  setBestRolls(JSON.parse(localStorage.getItem("best rolls")))
+}
+},
+[tenzies]);
+React.useEffect(()=>
+{if (JSON.parse(localStorage.getItem("best time"))) {
+  if (finalTime<JSON.parse(localStorage.getItem("best time"))) 
+    localStorage.removeItem("best time")
+    localStorage.setItem("best time",JSON.stringify(time))
+  } else {
+    localStorage.setItem("best time",JSON.stringify(time))
+    setBestTime(JSON.parse(localStorage.getItem("best time")))
+  }
+
+},
+[tenzies]);      
+      
   return (
-    <main>
+    <main>  
+      {tenzies && <Confetti height={windowSize.windowHeight} width={windowSize.windowWidth}/>}
       <h1>Tenzies </h1>
       <h4>Roll until all dice are the same. 
         Click each die to freeze it at its 
@@ -128,13 +146,23 @@ export default function App() {
         <div className="dice-con">
             {dieElements}
         </div>
-      <button onClick={rollDice} >{tenzies?"New Game":"Roll"}</button>
-      best rolls:{bestRolls}
-      <br></br>
-      best time:{(Math.floor((bestTime / 1000)))}:
-            {("0" + ((bestTime/ 10) % 10))}
-     {tenzies && <Confetti height={windowSize.windowHeight} width={windowSize.windowWidth}/>}
-    </main>
+      <button onClick={function () {rollDice ()
+                            setIsClick(true)
+      }} >{tenzies?"New Game":"Roll"}</button>
+      <div className="last-score">
+      <span>
+          best time:  {("0"+Math.floor((bestTime/6000)%60)).slice(-2)}:
+            {("0"+Math.floor((bestTime/1000)%60)).slice(-2)}:
+            {("0"+Math.floor((bestTime/10)%1000)).slice(-2)}
+      </span>
+      <span>
+       best rolls: {bestRolls}
+      </span>
+        
+      </div>
+    
+      
+      </main>
   );
 }
 

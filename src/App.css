@@ -54,7 +54,8 @@ padding-left: 8px;
   display: grid;
   grid-template: auto auto / repeat(5, 1fr);
   width:230px;
-  height:180px;
+  height:130px;
+  grid-gap: 0px ;
   margin-left:auto;
   margin-right:auto;
   
@@ -89,9 +90,9 @@ color: var(--orange);
 }
 
 button{
-height: 36px;
+height: 40px;
 min-width: 75px;
-border-radius: 4px;
+border-radius: 5px;
 background-color:var(--orange);
 box-shadow: 0px 4px 4px 0px #00000040;
 cursor:pointer;
@@ -99,18 +100,19 @@ font-family: 'Karla';
 font-style: normal;
 font-weight: 700;
 font-size: 1rem;
-line-height: 19px;
+line-height: 15px;
 color: var(--dark-grey);
 background: rgba(240, 154, 6, 0.947);
 box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 backdrop-filter: blur(5.9px);
 -webkit-backdrop-filter: blur(5.9px);
 border: 1px solid var(--grey);
+
 }
 button:focus{
   outline:none;
--webkit-animation: shake-horizontal 2s cubic-bezier(0.455, 0.030, 0.515, 0.955) 0.5 both;
-animation: shake-horizontal 2s cubic-bezier(0.455, 0.030, 0.515, 0.955) 0.5 both;
+  -webkit-animation: shake-horizontal 2s cubic-bezier(0.455, 0.030, 0.515, 0.955) 0.5 both;
+  animation: shake-horizontal 2s cubic-bezier(0.455, 0.030, 0.515, 0.955) 0.5 both;
 }
 button:focus{
   box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.7);
@@ -121,10 +123,16 @@ button:focus{
   flex-direction: column;
   align-self: end;
   padding-right: 8px;
+  padding-bottom: 6px;
   font-weight: 400;
   color: var(--dark-yellow);
 }
-/* animation */
+.last-score{
+display: flex;
+gap:8rem;
+padding-top:15px;
+}
+                                      /* animation */
 
  @-webkit-keyframes color-change-2x {
   0% {
@@ -210,5 +218,35 @@ button:focus{
   90% {
     -webkit-transform: translateX(-8px);
             transform: translateX(-8px);
+  }
+}
+
+.swirl-in-fwd {
+	-webkit-animation: swirl-in-fwd 0.6s ease-out both;
+	        animation: swirl-in-fwd 0.6s ease-out both;
+}
+
+ @-webkit-keyframes swirl-in-fwd {
+  0% {
+    -webkit-transform: rotate(-540deg) scale(0);
+            transform: rotate(-540deg) scale(0);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: rotate(0) scale(1);
+            transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes swirl-in-fwd {
+  0% {
+    -webkit-transform: rotate(-540deg) scale(0);
+            transform: rotate(-540deg) scale(0);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: rotate(0) scale(1);
+            transform: rotate(0) scale(1);
+    opacity: 1;
   }
 }
